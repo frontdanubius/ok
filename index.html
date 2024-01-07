@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-image: url('re.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #dialog {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ccc;
+            max-width: 400px;
+            display: inline-block;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        #imgContainer {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        img {
+            max-width: 100px;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        #win, #gameOver {
+            display: none;
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+    <title>Reception Check-In Game</title>
+</head>
+<body>
+    <div id="dialog">
+        <div id="imgContainer">
+            <img id="diegoImg" src="b.jpg" alt="Diego">
+            <img id="marshaImg" src="m.jpg" alt="Marsha">
+            <img id="ahmedImg" src="a.jpg" alt="Ahmed">
+        </div>
+        <div id="result"></div>
+        <button onclick="startGame()">Start Check-In</button>
+    </div>
+
+    <div id="win">Congratulations! You have successfully checked in!</div>
+    <div id="gameOver">Game Over! Better luck next time.</div>
+
+    <script>
+        let chosenRoom = '';
+
+        function startGame() {
+            showImage('diegoImg');
+            showResult("Hello! I'm Diego, the receptionist. Welcome to our hotel!");
+            setTimeout(() => {
+                showResult("To begin, please choose a room type:");
+                showRoomOptions();
+            }, 3000);
+        }
+
+        function showRoomOptions() {
+            document.getElementById('result').innerHTML = `
+                <button onclick="chooseRoom('DKB')">DKB Room</button>
+                <button onclick="chooseRoom('DDB')">DDB Room</button>
+                <button onclick="chooseRoom('DB')">DB Room</button>
+                <button onclick="chooseRoom('TB')">TB Room</button>
+                <button onclick="chooseRoom('KB')">KB Room</button>
+            `;
+        }
+
+        function chooseRoom(roomType) {
+            chosenRoom = roomType;
+            showImage('diegoImg');
+            showResult(`You chose ${roomType} room. Now, let's proceed with the check-in process.`);
+            setTimeout(() => {
+                talkToMarsha();
+            }, 3000);
+        }
+
+        function talkToMarsha() {
+            showImage('marshaImg');
+            showResult("Hello! I'm Marsha, the duty manager. Welcome to our hotel!");
+            setTimeout(() => {
+                showResult(`I see you've chosen a ${chosenRoom} room. Now, let me check the availability.`);
+                setTimeout(() => {
+                    if (Math.random() < 0.7) {
+                        showResult(`Great news! The ${chosenRoom} room is available.`);
+                        setTimeout(() => {
+                            askAdditionalService();
+                        }, 3000);
+                    } else {
+                        gameOver();
+                    }
+                }, 3000);
+            }, 3000);
+        }
+
+        function askAdditionalService() {
+            showResult("Is there anything else you would like assistance with during your stay?");
+            setTimeout(() => {
+                showResult("Feel free to ask about local attractions, dining recommendations, or any special requests.");
+                setTimeout(() => {
+                    talkToAhmed();
+                }, 3000);
+            }, 3000);
+        }
+
+        function talkToAhmed() {
+            showImage('ahmedImg');
+            showResult("Hi there! I'm Ahmed, the concierge. Is there anything specific you'd like to know or any assistance you need?");
+            setTimeout(() => {
+                showResult("Additionally, would you like us to arrange a cab for you?");
+                setTimeout(() => {
+                    showResult("Please choose:");
+                    document.getElementById('result').innerHTML = `
+                        <button onclick="arrangeCab()">Yes, arrange a cab</button>
+                        <button onclick="finishCheckIn()">No, I'm good</button>
+                    `;
+                }, 3000);
+            }, 3000);
+        }
+
+        function arrangeCab() {
+            showResult("Great! We'll arrange a cab for you. Enjoy your stay!");
+            setTimeout(() => {
+                win();
+            }, 3000);
+        }
+
+        function finishCheckIn() {
+            showResult("Okay! If you need any assistance later, feel free to ask. Enjoy your stay!");
+            setTimeout(() => {
+                win();
+            }, 3000);
+        }
+
+        function showResult(message) {
+            document.getElementById('result').innerHTML = message;
+        }
+
+        function showImage(imgId) {
+            const imgElement = document.getElementById(imgId);
+            if (imgElement) {
+                const imgContainer = document.getElementById('imgContainer');
+                imgContainer.innerHTML = ''; // Clear previous images
+                const img = document.createElement('img');
+                img.src = imgElement.src;
+                img.alt = imgId;
+                imgContainer.appendChild(img);
+            }
+        }
+
+        function win() {
+            document.getElementById('dialog').style.display = 'none';
+            document.getElementById('win').style.display = 'block';
+        }
+
+        function gameOver() {
+            document.getElementById('dialog').style.display = 'none';
+            document.getElementById('gameOver').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
